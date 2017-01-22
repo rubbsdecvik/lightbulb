@@ -6,7 +6,7 @@ ansible_port={{ ssh_port }}
 {% endif %}
 
 [web]
-{% for grouper, list in instances.results|groupby('item') if grouper[0] == item %}
+{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
 {% for vm in list %}
 {% if 'control' not in vm.invocation.module_args.instance_tags.Name and 'haproxy' not in vm.invocation.module_args.instance_tags.Name%}
 {{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-(node)(\\d)', '\\1-\\2') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
@@ -15,7 +15,7 @@ ansible_port={{ ssh_port }}
 {% endfor %}
 
 [control]
-{% for grouper, list in instances.results|groupby('item') if grouper[0] == item %}
+{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
 {% for vm in list %}
 {% if 'control' in vm.invocation.module_args.instance_tags.Name %}
 {{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-([\\w]*)', '\\1') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
@@ -24,7 +24,7 @@ ansible_port={{ ssh_port }}
 {% endfor %}
 
 [haproxy]
-{% for grouper, list in instances.results|groupby('item') if grouper[0] == item %}
+{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
 {% for vm in list %}
 {% if 'haproxy' in vm.invocation.module_args.instance_tags.Name %}
 {{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-([\\w]*)', '\\1') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
@@ -33,7 +33,7 @@ ansible_port={{ ssh_port }}
 {% endfor %}
 
 [grafana]
-{% for grouper, list in instances.results|groupby('item') if grouper[0] == item %}
+{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
 {% for vm in list %}
 {% if 'haproxy' in vm.invocation.module_args.instance_tags.Name %}
 grafana ansible_host={{ vm.tagged_instances[0].public_ip }}

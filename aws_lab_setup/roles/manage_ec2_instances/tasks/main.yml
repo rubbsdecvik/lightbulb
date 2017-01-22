@@ -38,10 +38,19 @@
   with_nested:
     - "{{ users }}"
     - "{{ ec2_lab_node_types }}"
-  register: instances
+  register: ec2_jobs
+  async: 7200
+  poll: 0
   tags:
     - always
     - provision
+
+- name: Wait for instance creation to complete
+  async_status: jid="{{ item.ansible_job_id }}"
+  register: instances
+  until: instances.finished
+  retries: 300
+  with_items: "{{ ec2_jobs.results }}"
 
 - name: Include tasks only needed when creating instances
   include: create.yml
