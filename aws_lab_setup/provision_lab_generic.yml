@@ -10,7 +10,8 @@
 
   tasks:
     - name: test with_sequence
-      users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
+      set_fact:
+        users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
       with_sequence: count="{{ student_count }}"
 
     - name: debug users
