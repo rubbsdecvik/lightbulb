@@ -3,17 +3,42 @@
   connection: local
   become: no
   gather_facts: no
-  vars:
-    set_fact:
-      users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
-    with_sequence: count="{{ student_count }}"
 
   tasks:
-#    - name: test with_sequence
-#      set_fact:
-#        users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
-#      with_sequence: count="{{ student_count }}"
+    - name: generate users list
+      set_fact:
+        users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
+      with_sequence: count="{{ student_count }}"
 
     - name: debug users
       debug:
         var: users
+
+- name: Create lab instances in AWS
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: no
+  roles:
+    - manage_ec2_instances
+
+- name: Configure common options on managed nodes and control nodes
+  hosts: "managed_nodes:control_nodes"
+  become: yes
+  roles:
+    - user_accounts
+    - common
+
+- name: Configure control node
+  hosts: control_nodes
+  become: yes
+  roles:
+    - control_node
+
+- name: Email inventory to students
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: no
+  roles:
+    - email
