@@ -10,10 +10,6 @@
         users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
       with_sequence: count="{{ student_count }}"
 
-    - name: debug users
-      debug:
-        var: users
-
 - name: Create lab instances in AWS
   hosts: localhost
   connection: local
