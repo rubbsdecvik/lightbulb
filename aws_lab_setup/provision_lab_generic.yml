@@ -31,10 +31,3 @@
   roles:
     - control_node
 
-- name: Email inventory to students
-  hosts: localhost
-  connection: local
-  become: no
-  gather_facts: no
-  roles:
-    - email
