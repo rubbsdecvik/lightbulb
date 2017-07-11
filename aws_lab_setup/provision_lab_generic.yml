@@ -3,9 +3,10 @@
   connection: local
   become: no
   gather_facts: no
-  set_fact:
-    users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
-  with_sequence: count="{{ student_count }}"
+  vars:
+    set_fact:
+      users: "{{ users|default([]) + [ {'name': 'student' + item, 'username': 'student' + item, 'email': 'student' + item + '@example.com'} ] }}"
+    with_sequence: count="{{ student_count }}"
 
   tasks:
     - name: debug users
