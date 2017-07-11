@@ -31,3 +31,10 @@
   roles:
     - control_node
 
+- name: Email inventory to instructor
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: no
+  roles:
+    - email-instructor
