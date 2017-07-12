@@ -51,6 +51,7 @@
   until: instances.finished
   retries: 300
   with_items: "{{ ec2_jobs.results }}"
+  ignore_errors: yes
 
 - name: Include tasks only needed when creating instances
   include: create.yml
