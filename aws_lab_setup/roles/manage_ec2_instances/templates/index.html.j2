@@ -71,8 +71,8 @@ Request Licensing page (Pick the second option: non-Enterprise version for immed
 
 <hr>
   </div>
-{% for user in users %}
   <div data-role="main" class="ui-content">
+{% for user in users %}
     <div data-role="collapsible">
       <h1>{{ user.username }} - Click to see details!</h1>
       <p>[all:vars]<br />
@@ -100,8 +100,8 @@ ansible_port={{ ssh_port }}<br />
 {% endfor %}
 {% endfor %}</p>
     </div>
-  </div>
 {% endfor %}
+  </div>
   <div data-role="footer">
     <h1>Thanks for participating!</h1>
   </div>
