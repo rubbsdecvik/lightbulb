@@ -76,16 +76,16 @@ Request Licensing page (Pick the second option: non-Enterprise version for immed
 {% for user in users %}
   <div data-role="main" class="ui-content">
     <div data-role="collapsible">
-      <h1>{{ item.username }} - Click to see details!</h1>
+      <h1>{{ user.username }} - Click to see details!</h1>
       <p>[all:vars]
-ansible_user={{ item.username }}
+ansible_user={{ user.username }}
 ansible_ssh_pass={{ admin_password }}
 {% if ssh_port is defined %}
 ansible_port={{ ssh_port }}
 {% endif %}
 
 [web]
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
+{% for grouper, list in instances.results|groupby('user') if grouper.item[0] == user %}
 {% for vm in list %}
 {% if 'control' not in vm.invocation.module_args.instance_tags.Name and 'haproxy' not in vm.invocation.module_args.instance_tags.Name%}
 {{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-(node)(\\d)', '\\1-\\2') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
@@ -94,7 +94,7 @@ ansible_port={{ ssh_port }}
 {% endfor %}
 
 [control]
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
+{% for grouper, list in instances.results|groupby('user') if grouper.item[0] == user %}
 {% for vm in list %}
 {% if 'control' in vm.invocation.module_args.instance_tags.Name %}
 {{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-([\\w]*)', '\\1') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
@@ -111,49 +111,3 @@ ansible_port={{ ssh_port }}
 
 </body>
 </html>
-
-
-
-
-[all:vars]
-ansible_user={{ item.username }}
-ansible_ssh_pass={{ admin_password }}
-{% if ssh_port is defined %}
-ansible_port={{ ssh_port }}
-{% endif %}
-
-[web]
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
-{% for vm in list %}
-{% if 'control' not in vm.invocation.module_args.instance_tags.Name and 'haproxy' not in vm.invocation.module_args.instance_tags.Name%}
-{{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-(node)(\\d)', '\\1-\\2') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
-{% endif %}
-{% endfor %}
-{% endfor %}
-
-[control]
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
-{% for vm in list %}
-{% if 'control' in vm.invocation.module_args.instance_tags.Name %}
-{{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-([\\w]*)', '\\1') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
-{% endif %}
-{% endfor %}
-{% endfor %}
-
-[haproxy]
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
-{% for vm in list %}
-{% if 'haproxy' in vm.invocation.module_args.instance_tags.Name %}
-{{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-([\\w]*)', '\\1') }} ansible_host={{ vm.tagged_instances[0].public_ip }}
-{% endif %}
-{% endfor %}
-{% endfor %}
-
-[grafana]
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == item %}
-{% for vm in list %}
-{% if 'haproxy' in vm.invocation.module_args.instance_tags.Name %}
-grafana ansible_host={{ vm.tagged_instances[0].public_ip }}
-{% endif %}
-{% endfor %}
-{% endfor %}
