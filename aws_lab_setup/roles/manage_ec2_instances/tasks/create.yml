@@ -70,3 +70,12 @@
     - inventory
     - users
     - user_accounts
+
+- name: Generate html page with student details
+  template:
+    src: index.html.j2
+    dest: index.html
+  tags:
+    - inventory
+    - users
+    - user_accounts
