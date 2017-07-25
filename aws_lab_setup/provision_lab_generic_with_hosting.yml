@@ -1,0 +1,41 @@
+- name: Create hosting instance on AWS
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: no
+  roles:
+    - setup_ec2_hosting
+
+- name: Install nginx
+  hosts: hosting_nodes
+  become: yes
+  roles:
+    - role: jdauphant.nginx
+      nginx_sites:
+        default:
+          - listen 80
+          - server_name _
+          - root "/usr/share/nginx/html"
+          - index index.html
+
+  post_tasks:
+    - name: copy index.html
+      file:
+        src: index.html
+        dest: /usr/share/nginx/html/index.html
+
+    - name: proper response from nginx is received
+      uri:
+        url: https://{{ inventory_hostname }}/
+        return_content: yes
+        validate_certs: no
+      register: response
+      until: "'Ansible Lightbulb Workshop' in response.content"
+      retries: 10
+      delay: 1
+      ignore_errors: yes
+
+    - name: output url
+      debug:
+        msg: 'application is available at https://{{ inventory_hostname }}/'
+      when: response | success

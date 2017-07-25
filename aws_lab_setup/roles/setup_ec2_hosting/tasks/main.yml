@@ -1,0 +1,80 @@
+- name: Create or destroy EC2 instance for hosting
+  ec2:
+    assign_public_ip: yes
+    key_name: "{{ ec2_key_name }}"
+    group: "{{ ec2_security_group }}"
+    instance_type: "{{ ec2_instance_types['rhel7'].size }}"
+    image: "{{ ec2_instance_types['rhel7'].ami_id }}"
+    region: "{{ ec2_region }}"
+    exact_count: "{{ ec2_exact_count }}"
+    count_tag:
+      Name: "{{ ec2_name_prefix }}-hosting"
+    instance_tags:
+      Name: "{{ ec2_name_prefix }}-hosting"
+      app: "{{ ec2_name_prefix }}"
+    wait: "{{ ec2_wait }}"
+    vpc_subnet_id: "{{ ec2_vpc_subnet_id | default(omit) }}"
+    volumes:
+      - device_name: /dev/sda1
+        volume_type: gp2
+        volume_size: "{{ ec2_instance_types['rhel7'].disk_space }}"
+        delete_on_termination: true
+  register: ec2_job
+  async: 7200
+  poll: 0
+  tags:
+    - always
+    - provision
+    - hosting
+
+- name: Wait for instance creation to complete
+  async_status: jid="{{ ec2_job.ansible_job_id }}"
+  register: instance
+  until: instance.finished
+  retries: 300
+  ignore_errors: yes
+  tags:
+    - always
+    - provision
+    - hosting
+
+- name: Waiting for servers to come online
+  wait_for: host="{{ instance.tagged_instances[0].public_ip }}" port="{{ ssh_port }}" search_regex=OpenSSH
+  when: instance | changed
+  tags:
+    - always
+    - provision
+    - hosting
+
+- name: Add hosts to groups
+  add_host:
+    name: "{{ item.tagged_instances[0].public_ip }}"
+    ansible_host: "{{ item.tagged_instances[0].public_ip }}"
+    groups: hosting_nodes
+  with_items: "{{ instance.results }}"
+  when: instance | changed
+  changed_when: no
+  tags:
+    - always
+    - provision
+    - hosting
+
+- name: Get record for router ELB DNS Entry
+  route53:
+    command: get
+    zone: "{{ hosted_zone_domain_name }}"
+    record: "{{ ec2_name_prefix }}.{{ hosted_zone_domain_name }}"
+    type: A
+  register: routerelbrec
+  when: hosted_zone_domain_name is defined and ec2_name_prefix is defined
+
+- name: Create Router ELB DNS Entry if it doesn't exist
+  route53:
+    #state: present ## Added in Ansible 2.4 will remove need for when statement below
+    command: create
+    overwrite: yes
+    zone: "{{ hosted_zone_domain_name }}"
+    record: "{{ ec2_name_prefix }}.{{ hosted_zone_domain_name }}"
+    type: A
+    value: "{{ instance.results[0].tagged_instances[0].public_ip }}"
+  when: routerelbrec.set is defined and "{} == routerelbrec.set"
