@@ -75,5 +75,5 @@
     zone: "{{ hosted_zone_domain_name }}"
     record: "{{ ec2_name_prefix }}.{{ hosted_zone_domain_name }}"
     type: A
-    value: "{{ instance.results[0].tagged_instances[0].public_ip }}"
+    value: "{{ instance.tagged_instances[0].public_ip }}"
   when: routerelbrec.set is defined and "{} == routerelbrec.set"
