@@ -47,16 +47,10 @@
     - nginx
 
   post_tasks:
-    - name: remove index.html
-      file:
-        state: absent
-        dest: /usr/share/nginx/html/index.html
-
     - name: copy index.html
-      file:
+      copy:
         src: index.html
         dest: /usr/share/nginx/html/index.html
-        force: yes
 
     - name: set selinux
       sefcontext:
