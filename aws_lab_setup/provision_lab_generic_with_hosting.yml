@@ -54,7 +54,7 @@
 
     - name: copy index.html
       file:
-        src: "index.html"
+        src: index.html
         dest: /usr/share/nginx/html/index.html
         force: yes
 
