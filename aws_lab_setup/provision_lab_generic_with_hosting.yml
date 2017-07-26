@@ -10,13 +10,7 @@
   hosts: hosting_nodes
   become: yes
   roles:
-    - role: jdauphant.nginx
-      nginx_sites:
-        default:
-          - listen 80
-          - server_name _
-          - root "/usr/share/nginx/html"
-          - index index.html
+    - nginx
 
   post_tasks:
     - name: copy index.html
