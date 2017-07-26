@@ -47,6 +47,11 @@
     - nginx
 
   post_tasks:
+    - name: remove index.html
+      file:
+        state: absent
+        dest: /usr/share/nginx/html/index.html
+
     - name: copy index.html
       file:
         src: "index.html"
