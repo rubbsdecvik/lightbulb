@@ -49,9 +49,16 @@
   post_tasks:
     - name: copy index.html
       file:
-        src: "{{ playbook_dir }}/index.html"
+        src: "index.html"
         dest: /usr/share/nginx/html/index.html
         force: yes
+
+    - name: set selinux
+      sefcontext:
+        target: '/usr/share/nginx/html'
+        setype: httpd_sys_content_t
+        state: present
+      when: ansible_selinux.status is defined and ansible_selinux.status == "enabled"
 
     - name: proper response from nginx is received
       uri:
