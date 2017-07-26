@@ -49,7 +49,7 @@
   post_tasks:
     - name: copy index.html
       file:
-        src: index.html
+        src: "{{ playbook_dir }}/index.html"
         dest: /usr/share/nginx/html/index.html
 
     - name: proper response from nginx is received
