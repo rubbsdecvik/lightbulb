@@ -55,5 +55,5 @@
 - name: site enabled config
   template:
     src: site.conf.j2
-    dest: /etc/nginx/nsites-enabled.d/site.conf
+    dest: /etc/nginx/sites-enabled.d/site.conf
   notify: reload nginx
