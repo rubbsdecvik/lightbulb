@@ -51,6 +51,7 @@
       file:
         src: "{{ playbook_dir }}/index.html"
         dest: /usr/share/nginx/html/index.html
+        force: yes
 
     - name: proper response from nginx is received
       uri:
