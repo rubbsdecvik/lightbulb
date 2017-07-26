@@ -16,7 +16,7 @@
 
     - name: debug elb dns record
       debug:
-        var: "{{ routerelbrec }} "
+        var: routerelbrec
 
     - name: Delete Router ELB DNS Entry if it doesn't exist
       route53:
