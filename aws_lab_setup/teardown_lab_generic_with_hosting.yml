@@ -13,6 +13,7 @@
         type: A
       register: routerelbrec
       when: hosted_zone_domain_name is defined and ec2_name_prefix is defined
+      ignore_errors: yes
 
     - name: Delete Router ELB DNS Entry if it doesn't exist
       route53:
