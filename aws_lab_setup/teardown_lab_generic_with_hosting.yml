@@ -24,6 +24,7 @@
         type: A
         value: "{{ routerelbrec.set.value }}"
       when: routerelbrec.set is defined and "{} != routerelbrec.set"
+      ignore_errors: yes
 
     - name: get ec2 instance information
       ec2_remote_facts:
