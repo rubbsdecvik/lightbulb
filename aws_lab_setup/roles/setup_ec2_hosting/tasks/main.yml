@@ -50,6 +50,7 @@
   add_host:
     name: "{{ instance.tagged_instances[0].public_ip }}"
     ansible_host: "{{ instance.tagged_instances[0].public_ip }}"
+    ansible_user: "{{ ec2_login_names['rhel7'] }}"
     groups: hosting_nodes
   changed_when: no
   tags:
