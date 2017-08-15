@@ -51,7 +51,6 @@
     name: "{{ instance.tagged_instances[0].public_ip }}"
     ansible_host: "{{ instance.tagged_instances[0].public_ip }}"
     groups: hosting_nodes
-  when: instance | changed
   changed_when: no
   tags:
     - always
