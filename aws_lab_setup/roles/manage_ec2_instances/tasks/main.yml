@@ -29,6 +29,7 @@
     instance_tags:
       Name: "{{ ec2_name_prefix }}-{{ item.0.username }}-{{ item.1.name }}"
       app: "{{ ec2_name_prefix }}"
+      pod: "{{ ec2_name_prefix }}-{{ item.0.username }}"
     wait: "{{ ec2_wait }}"
     vpc_subnet_id: "{{ ec2_vpc_subnet_id | default(omit) }}"
     volumes:
