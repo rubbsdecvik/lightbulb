@@ -1,42 +1,8 @@
-- name: Create or destroy EC2 instance for hosting
-  ec2:
-    assign_public_ip: yes
-    key_name: "{{ ec2_key_name }}"
-    group: "{{ ec2_security_group }}"
-    instance_type: "{{ ec2_instance_types['rhel7'].size }}"
-    image: "{{ ec2_instance_types['rhel7'].ami_id }}"
-    region: "{{ ec2_region }}"
-    exact_count: "{{ ec2_exact_count }}"
-    count_tag:
-      Name: "{{ ec2_name_prefix }}-hosting"
-    instance_tags:
-      Name: "{{ ec2_name_prefix }}-hosting"
-      app: "{{ ec2_name_prefix }}"
-    wait: "{{ ec2_wait }}"
-    vpc_subnet_id: "{{ ec2_vpc_subnet_id | default(omit) }}"
-    volumes:
-      - device_name: /dev/sda1
-        volume_type: gp2
-        volume_size: "{{ ec2_instance_types['rhel7'].disk_space }}"
-        delete_on_termination: true
-  register: ec2_job
-  async: 7200
-  poll: 0
-  tags:
-    - always
-    - provision
-    - hosting
+- import_tasks: "ec2.yml"
+  when: ansible_version.full | version_compare('2.4', '>=')
 
-- name: Wait for instance creation to complete
-  async_status: jid="{{ ec2_job.ansible_job_id }}"
-  register: instance
-  until: instance.finished
-  retries: 300
-  ignore_errors: yes
-  tags:
-    - always
-    - provision
-    - hosting
+- include: "ec2_async.yml"
+  when: ansible_version.full | version_compare('2.4', '<')
 
 - name: Waiting for servers to come online
   wait_for: host="{{ instance.tagged_instances[0].public_ip }}" port="{{ ssh_port }}" search_regex=OpenSSH
