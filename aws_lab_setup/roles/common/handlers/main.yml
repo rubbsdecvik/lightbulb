@@ -5,8 +5,6 @@
 
 - name: reboot
   command: sleep 2 && reboot
-  async: 30
-  poll: 0
 
 - name: wait for instance
   delegate_to: localhost
