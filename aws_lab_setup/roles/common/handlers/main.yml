@@ -4,7 +4,7 @@
     state: restarted
 
 - name: reboot
-  shell: sleep 2 && reboot
+  command: sleep 2 && reboot
   async: 30
   poll: 0
 
