@@ -26,6 +26,13 @@
     - provision
     - hosting
 
-- name: set instance fact
-  set_fact:
-    instance: "{{ ec2_job }}"
+- name: Wait for instance creation to complete
+  async_status: jid="{{ ec2_job.ansible_job_id }}"
+  register: instance
+  until: instance.finished
+  retries: 300
+  ignore_errors: yes
+  tags:
+    - always
+    - provision
+    - hosting

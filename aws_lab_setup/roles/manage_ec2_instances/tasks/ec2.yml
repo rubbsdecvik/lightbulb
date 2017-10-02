@@ -29,6 +29,10 @@
     - always
     - provision
 
-- name: set instance fact
-  set_fact:
-    instances: "{{ ec2_jobs }}"
+- name: Wait for instance creation to complete
+  async_status: jid="{{ item.ansible_job_id }}"
+  register: instances
+  until: instances.finished
+  retries: 300
+  with_items: "{{ ec2_jobs.results }}"
+  ignore_errors: yes
