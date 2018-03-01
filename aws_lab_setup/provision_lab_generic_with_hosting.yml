@@ -52,6 +52,21 @@
         src: index.html
         dest: /usr/share/nginx/html/index.html
 
+    - name: Install Git
+      yum:
+        name: git
+        state: present
+
+    - name: create lightbulb directory
+      file:
+        path: /usr/share/nginx/html/lightbulb
+        state: directory
+
+    - name: Check out decks
+      git:
+        repo: https://github.com/ansible/lightbulb.git
+        dest: /usr/share/nginx/html/lightbulb
+
     - name: set selinux
       sefcontext:
         target: '/usr/share/nginx/html'

@@ -39,7 +39,7 @@ Try it Yourself »
   </div>
   <div data-role="main">
     <img src="https://www.ansible.com/hubfs/2016_Images/Assets/Ansible-Tower-Logotype-Small-RGB-FullBlack.png"/>
-    <h3>CONTACT: "{{ instructor_email }}"<br>
+    <h3>CONTACT: ""<br>
 
 
 GITHUB for Ansible Lightbulb: <a href="https://github.com/ansible/lightbulb" target="lightbulb">https://github.com/ansible/lightbulb</a><br><br>
@@ -72,37 +72,96 @@ Request Licensing page (Pick the second option: non-Enterprise version for immed
 
 <hr>
   </div>
-{% for user in users %}
   <div data-role="main" class="ui-content">
     <div data-role="collapsible">
-      <h1>{{ user.username }} - Click to see details!</h1>
+      <h1>bwayne - Click to see details!</h1>
       <p>[all:vars]<br />
-ansible_user={{ user.username }}<br />
-ansible_ssh_pass={{ admin_password }}<br />
-{% if ssh_port is defined %}<br />
-ansible_port={{ ssh_port }}<br />
-{% endif %}
+ansible_user=bwayne<br />
+ansible_ssh_pass=r3dh4t<br />
+<br />
+ansible_port=22<br />
 <br />
 [web]<br />
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == user %}
-{% for vm in list %}
-{% if 'control' not in vm.invocation.module_args.instance_tags.Name and 'haproxy' not in vm.invocation.module_args.instance_tags.Name%}
-{{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-(node)(\\d)', '\\1-\\2') }} ansible_host={{ vm.tagged_instances[0].public_ip }}<br />
-{% endif %}
-{% endfor %}
-{% endfor %}
+node-1 ansible_host=34.205.247.106<br />
+node-2 ansible_host=35.170.57.48<br />
 <br />
 [control]<br />
-{% for grouper, list in instances.results|groupby('item') if grouper.item[0] == user %}
-{% for vm in list %}
-{% if 'control' in vm.invocation.module_args.instance_tags.Name %}
-{{ vm.invocation.module_args.instance_tags.Name | regex_replace('.*-([\\w]*)', '\\1') }} ansible_host={{ vm.tagged_instances[0].public_ip }}<br />
-{% endif %}
-{% endfor %}
-{% endfor %}</p>
+control ansible_host=52.3.221.154<br />
+</p>
     </div>
   </div>
-{% endfor %}
+  <div data-role="main" class="ui-content">
+    <div data-role="collapsible">
+      <h1>student1 - Click to see details!</h1>
+      <p>[all:vars]<br />
+ansible_user=student1<br />
+ansible_ssh_pass=r3dh4t<br />
+<br />
+ansible_port=22<br />
+<br />
+[web]<br />
+node-1 ansible_host=35.172.231.140<br />
+node-2 ansible_host=34.201.30.125<br />
+<br />
+[control]<br />
+control ansible_host=34.205.135.20<br />
+</p>
+    </div>
+  </div>
+  <div data-role="main" class="ui-content">
+    <div data-role="collapsible">
+      <h1>student2 - Click to see details!</h1>
+      <p>[all:vars]<br />
+ansible_user=student2<br />
+ansible_ssh_pass=r3dh4t<br />
+<br />
+ansible_port=22<br />
+<br />
+[web]<br />
+node-2 ansible_host=34.200.245.149<br />
+node-1 ansible_host=35.170.55.213<br />
+<br />
+[control]<br />
+control ansible_host=34.236.242.219<br />
+</p>
+    </div>
+  </div>
+  <div data-role="main" class="ui-content">
+    <div data-role="collapsible">
+      <h1>student3 - Click to see details!</h1>
+      <p>[all:vars]<br />
+ansible_user=student3<br />
+ansible_ssh_pass=r3dh4t<br />
+<br />
+ansible_port=22<br />
+<br />
+[web]<br />
+node-1 ansible_host=34.200.222.186<br />
+node-2 ansible_host=52.54.64.243<br />
+<br />
+[control]<br />
+control ansible_host=34.205.246.140<br />
+</p>
+    </div>
+  </div>
+  <div data-role="main" class="ui-content">
+    <div data-role="collapsible">
+      <h1>student4 - Click to see details!</h1>
+      <p>[all:vars]<br />
+ansible_user=student4<br />
+ansible_ssh_pass=r3dh4t<br />
+<br />
+ansible_port=22<br />
+<br />
+[web]<br />
+node-1 ansible_host=35.171.203.50<br />
+node-2 ansible_host=34.200.231.182<br />
+<br />
+[control]<br />
+control ansible_host=35.168.62.7<br />
+</p>
+    </div>
+  </div>
   <div data-role="footer">
     <h1>Thanks for participating!</h1>
   </div>
