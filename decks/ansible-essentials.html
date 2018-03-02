@@ -618,7 +618,7 @@ tasks:
 - name: Ensure httpd package is present
   yum:
     name: httpd
-    state: latest
+    state: present
 
 - name: Ensure latest index.html file is present
   copy:
@@ -634,9 +634,9 @@ tasks:
             <p>This example shows the task list of an Ansible playbook.</p>
             <p>
               <ol>
-                <li>The first task assures the latest nginx package is installed using yum.</li>
+                <li>The first task assures the Apache package is installed using yum.</li>
                 <li>The next uses the copy module to assure the latest version of a static home page file has been published.</li>
-                <li>The last task restarts the nginx service with the service module</li>
+                <li>The last task restarts the Apache service with the service module</li>
               </ol>
             </p>
           </aside>
@@ -657,13 +657,14 @@ tasks:
 - name: Ensure httpd package is present
   yum:
     name: httpd
-    state: latest
+    state: present
   <mark>notify: restart httpd</mark>
 
 - name: Ensure latest index.html file is present
   copy:
     src: files/index.html
     dest: /var/www/html/
+  <mark>notify: restart httpd</mark>
 
 <mark>handlers:</mark>
 - name: Restart httpd
@@ -698,7 +699,7 @@ tasks:
   - name: Ensure httpd package is present
     yum:
       name: httpd
-      state: latest
+      state: present
 
   - name: Ensure latest index.html file is present
     copy:
@@ -729,7 +730,7 @@ tasks:
    - <mark>name: httpd package is present</mark>
      yum:
        name: httpd
-       state: latest
+       state: present
 
    - <mark>name: latest index.html file is present</mark>
      copy:
@@ -761,12 +762,12 @@ tasks:
   - name: Ensure httpd package is present
     yum:
       name: httpd
-      state: latest
+      state: present
 
-  - name: Ensure latest index.html file is present
-    copy:
-      src: files/index.html
-      dest: /var/www/html/
+  - name: Ensure latest configuration file is present
+    template:
+      src: templates/httpd.conf.j2
+      dest: /etc/httpd/httpd.conf
 
   - name: Ensure httpd is started
     service:
@@ -793,12 +794,12 @@ tasks:
   - name: Ensure httpd package is present
     yum:
       name: httpd
-      state: latest
+      state: present
 
-  - name: Ensure latest index.html file is present
-    copy:
-      src: files/index.html
-      dest: /var/www/html/
+  - name: Ensure latest configuration file is present
+    template:
+      src: templates/httpd.conf.j2
+      dest: /etc/httpd/httpd.conf
 
   - name: Ensure httpd is started
     service:
@@ -824,12 +825,12 @@ tasks:
   - name: Ensure httpd package is present
     yum:
       name: httpd
-      state: latest
+      state: present
 
-  - name: Ensure latest index.html file is present
-    copy:
-      src: files/index.html
-      dest: /var/www/html/
+  - name: Ensure latest configuration file is present
+    template:
+      src: templates/httpd.conf.j2
+      dest: /etc/httpd/httpd.conf
 
   - name: Ensure httpd is started
     service:
@@ -855,12 +856,12 @@ tasks:
   - name: Ensure latest httpd package is present
     <mark>yum:</mark>
       <mark>name: httpd</mark>
-      <mark>state: latest</mark>
+      <mark>state: present</mark>
 
-  - name: Ensure latest index.html file is present
-    <mark>copy:</mark>
-      <mark>src: files/index.html</mark>
-      <mark>dest: /var/www/html/</mark>
+  - name: Ensure latest configuration file is present
+    <mark>template:</mark>
+      <mark>src: templates/httpd.conf.j2</mark>
+      <mark>dest: /etc/httpd/httpd.conf</mark>
 
   - name: Ensure httpd is started
     <mark>service:</mark>
@@ -929,7 +930,7 @@ tasks:
             <pre class="language-yaml"><code data-noescape>
 - yum:
     name: <mark>&quot;{{ item }}&quot;</mark>
-    state: latest
+    state: present
   <mark>with_items:</mark>
   <mark>- httpd</mark>
   <mark>- mod_wsgi</mark>
@@ -945,7 +946,7 @@ tasks:
             <pre class="language-yaml"><code data-noescape>
 - yum:
     name: httpd
-    state: latest
+    state: present
   <mark>when: ansible_os_family == &quot;RedHat&quot;</mark>
             </code></pre>
             <aside class="notes">
@@ -960,7 +961,7 @@ tasks:
             <pre class="language-yaml"><code data-noescape>
 - yum:
     name: &quot;{{ item }}&quot;
-    state: latest
+    state: present
   with_items:
   - httpd
   - mod_wsgi
@@ -985,7 +986,7 @@ tasks:
 - <mark>block:</mark>
   - yum:
       name: &quot;{{ item }}&quot;
-      state: latest
+      state: present
     with_items:
     - httpd
     - mod_wsgi
