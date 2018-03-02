@@ -64,8 +64,9 @@
 
     - name: Check out decks
       git:
-        repo: https://github.com/ansible/lightbulb.git
+        repo: https://github.com/rubbsdecvik/lightbulb.git
         dest: /usr/share/nginx/html/lightbulb
+        version: lightbulb_modified
 
     - name: set selinux
       sefcontext:
