@@ -7,7 +7,7 @@ ec2_key_name: "{{ ec2_regions[ec2_region].key_name }}"
 ec2_exact_count: 1
 ec2_wait: yes
 
-hosted_zone_domain_name: rubbs.net
+hosted_zone_domain_name: rhlabs.io
 
 ec2_lab_node_types:
   - name: control
