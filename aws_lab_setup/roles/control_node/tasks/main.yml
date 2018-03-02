@@ -17,6 +17,7 @@
       - git
       - python-pip
       - sshpass
+      - nano
     state: latest
     enablerepo: epel-testing
   register: install_base_packages

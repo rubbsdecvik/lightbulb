@@ -71,6 +71,12 @@ Request Licensing page (Pick the second option: non-Enterprise version for immed
 <h3><a href="https://www.ansible.com/workshop-license" target="new_gd_license">Register for your Workshop License here.</a><br><br></h3>
 
 <hr>
+
+<h3><a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html" target="new_main">Download Putty SSH Client here.</a></h3></br></br>
+
+<h3><a href="https://tools.bartlweb.net/webssh/" target="new_main">Web SSH Client here.</a></h3></br>
+
+<hr>
   </div>
 {% for user in users %}
   <div data-role="main" class="ui-content">
@@ -92,7 +98,7 @@ ansible_port={{ ssh_port }}<br />
 {% endfor %}
 {% endfor %}
 <br />
-[control]<br />
+[control-group]<br />
 {% for grouper, list in instances.results|groupby('item') if grouper.item[0] == user %}
 {% for vm in list %}
 {% if 'control' in vm.invocation.module_args.instance_tags.Name %}
