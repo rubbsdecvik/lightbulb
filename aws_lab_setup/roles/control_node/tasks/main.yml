@@ -18,6 +18,7 @@
       - python-pip
       - sshpass
       - nano
+      - tmux
     state: latest
     enablerepo: epel-testing
   register: install_base_packages
@@ -81,6 +82,7 @@
   with_items:
     - ansible.cfg.j2
     - vimrc.j2
+    - bashrc.j2
   tags:
     - control_node
     - control

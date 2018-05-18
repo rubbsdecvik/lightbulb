@@ -1,0 +1,22 @@
+# .bashrc           
+
+# Source global definitions             
+if [ -f /etc/bashrc ]; then             
+        . /etc/bashrc                   
+fi                  
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=                 
+
+# User specific aliases and functions
+
+# TMUX
+if which tmux >/dev/null 2>&1; then
+    # if no session is started, start a new session
+    test -z ${TMUX} && tmux
+
+    # when quitting tmux, try to attach
+    while test -z ${TMUX}; do
+        tmux attach || break
+    done
+fi
